@@ -1,0 +1,14 @@
+Lawrence 1 2
+KansasCity 3 2
+Houston 144 5000
+Dallas 150 -24
+NewYork -500 -1234
+Wichita -240 432
+Sacremento 400 200
+Paris 400000 300000
+London 2403123 123409
+ThisIsDumb 9999 9999
+IdontKNOWANYOTHERcities 666 666
+I 444 444
+II 444 432
+III 433 234
