@@ -48,7 +48,8 @@ void Array::remove(int x, int y) {
 
 void Array::print() const {
   for(int i = 0; i < _curr; ++i) {
-    std::cout << "(" << _arr[i].x << "," << _arr[i].y << ")" << " ";
+    //std::cout << "(" << _arr[i].x << "," << _arr[i].y << ")" << " ";
+    std::cout << _arr[i].name << " ";
   }
 }
 

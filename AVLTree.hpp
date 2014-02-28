@@ -37,8 +37,10 @@ private:
   void rotateWithRightChild(Node * & t);
   void doubleWithLeftChild(Node * & t);
   void doubleWithRightChild(Node * & t);
+  void remove_helper(Node * & t, const std::string & name );
   void destruct_helper(Node * & t);
   void printinorder_helper(Node * t) const;
+  int getBalance(Node * t) const;
   int height( Node * t ) const;
   
   Node * root;

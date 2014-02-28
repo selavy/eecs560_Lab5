@@ -13,6 +13,91 @@ void AVLTree::insert(const City& city) {
 }
 
 void AVLTree::remove(const std::string& name) {
+  remove_helper(root, name);
+}
+
+void AVLTree::remove_helper(Node * & t, const std::string& name) {
+  if( t == NULL ) return; // wasn't able to find the node
+  else if(name < t->city.name) {
+    remove_helper( t->left, name );
+  }
+  else if(name > t->city.name) {
+    remove_helper( t->right, name );
+  }
+  else { // else found the node
+    // found the node to delete
+    
+    // Case 1: node has no children
+    if((!t->left) && (!t->right)) {
+      delete t;
+      t = NULL;
+    }
+    // Case 2a: node has 1 child on left
+    else if(!t->right) {
+      Node * save_left = t->left;
+      delete t;
+      t = save_left;
+    }
+
+    //Case 2b: node has 1 child on right
+    else if(!t->left) {
+      Node * save_right = t->right;
+      delete t;
+      t = save_right;
+    }
+
+    // Case 3: node has 2 children
+    else {
+      // find the inorder successor, left most child of right subtree
+      Node * succ = t->right;
+      
+      // case 1: succ has no left child
+      if(!succ->left) {
+	delete t;
+	t = succ;
+      }
+      // case 2: succ does have left child
+      else {
+	while(succ->left) succ = succ->left;
+	Node * save_right = succ->right;
+	t->city = succ->city;
+	delete succ;
+	succ = save_right;
+      }
+    }
+  }
+
+  if(!t) return;
+
+  t->height = MAX( height(t->left), height(t->right) ) + 1;
+  const int balance = getBalance( t );
+  const int balance_left = getBalance( t->left );
+  const int balance_right = getBalance( t->right );
+  
+  // Case 1: Left Left Case
+  if((balance > 1) && (balance_left >= 0)) {
+    rotateWithLeftChild(t);
+  }
+  // Case 2: Left Right Case
+  else if((balance > 1) && (balance_left < 0)) {
+    rotateWithRightChild(t->left);
+    rotateWithLeftChild(t);
+  }
+  // Case 3: Right Right
+  else if((balance < -1) && (balance_right <= 0)) {
+    rotateWithRightChild(t);
+  }
+  // Case 4: Right Left
+  else if((balance < -1) && (balance_right > 0)) {
+    rotateWithLeftChild(t->right);
+    rotateWithRightChild(t);
+  }
+  
+}
+
+int AVLTree::getBalance( Node * t ) const {
+  if(t == NULL) return 0;
+  return height( t->left ) - height( t->right );
 }
 
 void AVLTree::remove(int x, int y) {
@@ -20,14 +105,24 @@ void AVLTree::remove(int x, int y) {
 
 void AVLTree::print() const {
   std::queue<Node*> q;
+  //int limit = 1;
   q.push(root);
+  
   while(!q.empty()) {
-    Node * curr = q.front();
-    q.pop();
-    if(curr==NULL) continue;
-    q.push( curr->left );
-    q.push( curr->right );
-    std::cout << curr->city.name << " ";
+    //for(int i = 0; (i < limit) && (!q.empty()); ++i)
+    {
+      Node * curr = q.front();
+      q.pop();
+      if(curr==NULL) {
+	std::cout << "NULL ";
+	continue;
+      }
+      q.push( curr->left );
+      q.push( curr->right );
+      std::cout << curr->city.name << " ";
+    }
+    //limit *= 2;
+    //std::cout << std::endl;
   }
 }
 
